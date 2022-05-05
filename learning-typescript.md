@@ -289,3 +289,56 @@ const myPerson: Person = {
 
 // We don't need to provide nationality, if we don't want to
 ```
+
+# Generics
+
+Prerequisite for my pea brain to understand the below examples.
+
+## JS Closure
+
+```js
+function outer() {
+  var a = 10;
+
+  function inner() {
+    var b = 5;
+    console.log(`a= ${a}, b= ${b}`);
+  }
+  return inner;
+}
+
+var x = outer();
+```
+
+What happens when we run x:
+
+- JS reads the method outer, creates the variable a
+- Sees inner(), it's a function declaration, don't do anything
+- Sees the return for inner, reads the body of inner and returns it
+- Outer() has finished execution, all the variables within its scope cease to exist
+
+The variable _x_ now contains the body of the function '_inner_'.
+
+What if we were to then do this:
+
+```js
+var y = x();
+```
+
+We'd be executing the function '_inner_'.
+
+What then happens
+
+- Variable _b_ is created and set to 5
+- JS tries to run console.log on _a_ and _b_
+- But _a_ no longer exists! It ceased to exist when outer() finished running
+- _Except_ inner() can access the variables of its surrounding function.
+- inner() preserved the scope chain of outer() when outer() was executed,
+- so it can access outer()'s variables!
+- when we ran outer() the first time, inner() was stored in y, and held onto the value of _a_!
+
+Explanation of this could be wrong, but I think this is how closure works in JS.
+
+Felt that was a good precursor to following https://ts.chibicode.com/generics
+
+---
