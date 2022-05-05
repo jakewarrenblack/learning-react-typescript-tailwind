@@ -342,3 +342,139 @@ Explanation of this could be wrong, but I think this is how closure works in JS.
 Felt that was a good precursor to following https://ts.chibicode.com/generics
 
 ---
+
+Like useState(), we could write a makeState function with a getter and setter:
+
+```ts
+function makeState() {
+  let state: number;
+
+  function getState() {
+    return state;
+  }
+
+  function setState(x: number) {
+    state = x;
+  }
+
+  return { getState, setState };
+}
+
+const { getState, setState } = makeState();
+
+var x = setState(1);
+console.log(getState());
+
+var y = setState(2);
+console.log(getState());
+
+// Logs 1, 2
+```
+
+If we wanted to pass a string instead, we'd just change the type of state to string.
+
+What if we wanted makeState to be capable of creating _two different_ states, one state for numbers, and another state for strings?
+
+My current and probably future natural inclination would be to try:
+
+```ts
+function makeState() {
+  let state: number | string;
+
+  // etc
+}
+```
+
+Unfortunately, that makes me a stupid idiot.
+
+That would just create a state that allows both numbers _and_ strings.
+
+**Solution, generics:**
+
+```ts
+function makeState<S>() {
+  let state: S;
+
+  function setState(x: S) {
+    state = x;
+  }
+}
+```
+
+So when we use S like the above, we pass a _type_ instead of a value when calling makeState.
+
+So we could do:
+
+`makeState<number>()`
+
+Meaning we've passed the type 'number' for makeState to use, it'll change 'state' from the generic 'S' to be of type 'number'.
+
+So now state is a number, and setState only accepts a number, we have our number-only state.
+
+makeState can be called a **generic function** because it takes a type parameter.
+
+The only problem left is that we could pass any type we want to, when what we said we wanted was a function that could make a number-only or string-only state, not a state of any type at all.
+
+**Solution:**
+
+```ts
+function makeState<S extends number | string>() {
+  let state: S;
+}
+```
+
+We can also set a default type to save having to provide it every time.
+
+To make number the default type:
+
+```ts
+function makeState<S extends number | string = number>() {
+  let state: S;
+}
+```
+
+So now S will have a default type of number, if no type is specified when calling makeState. Just like providing a default parameter value.
+
+We can also create a generic function to accept multiple type parameters, extending particular types to restrict what it accepts, or adding defaults just as we did above:
+
+```ts
+function makePair<
+  F extends number | string = number,
+  S extends number | string = number
+>() {
+  let pair: { first: F; second: S };
+
+  function getPair() {
+    return pair;
+  }
+
+  function setPair(x: F, y: S) {
+    pair = {
+      first: x,
+      second: y,
+    };
+  }
+
+  return { getPair, setPair };
+}
+```
+
+We could also extract our 'pair' into a generic interface or type alias.
+
+```ts
+interface Pair<A, B> {
+  first: A;
+  second: B;
+}
+
+// Or
+
+type Pair<A, B> = {
+  first: A;
+  second: B;
+};
+
+function makePair<F, S>() {
+  let pair: Pair<F, S>;
+}
+```
