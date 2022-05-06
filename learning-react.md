@@ -386,3 +386,111 @@ const changeDog = (index) => {
 // Will replace dog at index 1 with Joe, aged 10
 changeDog(1);
 ```
+
+## 9. useRef
+
+Refs are a bit like useState except they don't trigger re-renders. They do persist across renders.
+
+An example is if we want to have a counter showing how many times a component has rendered. We could try to do it with useState, but that wouldn't work.
+
+```js
+import react, {useState, useEffect} from 'react';
+
+const [renderCount, setRenderCount] = useState(0);
+const [text, setText] = useState('');
+
+useEffect(() => {
+  setRenderCount((prevRenderCount) => prevRenderCount + 1)
+})
+
+const App = () => {
+  return (
+    <div>
+      <input
+        type="text"
+        value={input}
+        onChange={(e) => setText(e.target.value)}
+      />
+      <br/>
+
+      <p>You entered {text}<p>
+      <p>I rendered {renderCount} times</p>
+    </div>
+  )
+}
+```
+
+That wouldn't work, because useEffect would be stuck in an infinite loop. Changing the state triggers a re-render, so it'd just keep going.
+
+If we used a ref instead of state for the render count, it would work perfectly.
+
+We can also use refs to get a reference to a DOM element. Common use case is focusing buttons or triggering hover states.
+
+```js
+import react, { useState, useEffect } from "react";
+
+const myRef = useRef();
+const [text, setText] = useState("");
+
+const focusButton = () => {
+  myRef.current.focus();
+};
+
+const App = () => {
+  return (
+    <div>
+      <input
+        ref={myRef}
+        type="text"
+        value={input}
+        onChange={(e) => setText(e.target.value)}
+      />
+      <br />
+
+      <button onClick={focusButton}>Focus the input</button>
+    </div>
+  );
+};
+```
+
+The above will focus the input element when we click the button. Every html element in react can have a ref like our input does above.
+
+## When we don't have access to the ref directly
+
+If we have some custom component with an input inside it, for example, we won't have direct access to the ref it holds. This is where **forwardRef** comes in.
+
+```js
+import react, { useState, useEffect } from "react";
+
+const myRef = useRef();
+const [text, setText] = useState("");
+
+const focusButton = () => {
+  myRef.current.focus();
+};
+
+// Wrap the component that needs the forwarded ref in the React.forwardRef function
+
+// And notice how we pass two properties now, the props, *and* the ref
+const MyCustomInput = React.forwardRef((props, ref) => {
+  // Spread operator to use all props at once
+  return <input ref={ref} {...props}/>
+})
+
+const App = () => {
+  return (
+    <div>
+      <!-- Now we can use our ref as normal, it goes straight into the real input element, rather than our custom component itself -->
+      <MyCustomInput
+        ref={myRef}
+        type="text"
+        value={input}
+        onChange={(e) => setText(e.target.value)}
+      />
+      <br />
+
+      <button onClick={focusButton}>Focus the input</button>
+    </div>
+  );
+};
+```
