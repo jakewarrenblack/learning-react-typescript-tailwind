@@ -478,3 +478,15 @@ function makePair<F, S>() {
   let pair: Pair<F, S>;
 }
 ```
+
+# React & TypeScript
+
+Making a functional component with TS
+
+```ts
+type AppProps = {
+    message: string;
+}
+
+const App = () => return (<div>)
+```
