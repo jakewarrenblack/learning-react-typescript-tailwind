@@ -644,3 +644,9 @@ It returns:
 
 - The new state
 - Dispatch function, to dispatch (send) the user's actions to our reducer function
+
+Keep in mind we can use an empty array as the initial state:
+
+```js
+const [dogs, dispatch] = useReducer(myReducer, []);
+```
