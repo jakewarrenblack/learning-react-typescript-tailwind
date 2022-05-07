@@ -535,6 +535,10 @@ const removeDog = (dogId) => {
 }
 ```
 
+### 1. Extracting all that state into dispatching our actions
+
+---
+
 Instead of setting state directly like this, we dispatch actions. This reminds me of Vuex.
 
 We can write a reducer function and use the reducer function from our component then.
@@ -573,3 +577,70 @@ const removeDog = (dogId) => {
 ```
 
 The object we passed to 'dispatch' above is an 'action'.
+
+### 2. Creating our reducer function
+
+---
+
+Since our dispatch calls above have types, our reducer function will be able to look at them, see what needs to happen, and find what to give to our state.
+
+So we'd write our reducer like this:
+
+```js
+const myReducer(dogs, action){
+  switch(action.type){
+    case 'added': {
+      return [
+        ...dogs,
+        {
+          id: 1
+          name: 'Billy',
+          age: 5,
+          breed: 'Pug'
+        }
+      ]
+    }
+    case 'changed': {
+      return dogs.map((d) => {
+        if(d.id === dog.id){
+          return dog
+        }
+        else{
+          return d;
+        }
+      })
+    }
+    case 'deleted': {
+      return dogs.filter((d) => d.id !== dogId)
+    }
+  }
+}
+```
+
+### 3. From within the component, use the Reducer
+
+We import useReducer:
+
+```js
+import { useReducer } from "react";
+```
+
+We can see useReducer and useState are pretty similar:
+
+```js
+// From:
+const [dogs, setDogs] = useState(initialDogsArray);
+
+// To:
+const [dogs, dispatch] = useReducer(myReducer, initialDogsArray);
+```
+
+useReducer takes:
+
+- 1. Our reducer function (myReducer)
+- 2. The initial state (initialDogsArray)
+
+It returns:
+
+- The new state
+- Dispatch function, to dispatch (send) the user's actions to our reducer function
