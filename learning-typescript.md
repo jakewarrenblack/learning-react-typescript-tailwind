@@ -389,7 +389,7 @@ Unfortunately, that makes me a stupid idiot.
 
 That would just create a state that allows both numbers _and_ strings.
 
-**Solution, generics:**
+## **Solution, generics:**
 
 ```ts
 function makeState<S>() {

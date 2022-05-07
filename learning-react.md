@@ -494,3 +494,82 @@ const App = () => {
   );
 };
 ```
+
+## 10. useReducer
+
+Good for when state management is getting a bit unwieldy.
+
+Can go for useState or useReducer, sort of does the same thing.
+
+Maybe if we had a load of state changing methods like in a todo app:
+
+```js
+// User presses 'Add'
+const addDog = (dog) => {
+  setDogs([
+    ...dogs,
+    {
+      id: 1
+      name: 'Billy',
+      age: 5,
+      breed: 'Pug'
+    }
+  ])
+}
+
+// User changes something, presses 'save'
+const updateDog = (dog) => {
+  setDogs(dogs.map((d) => {
+    if(d.id === dog.id){
+      return dog
+    }
+    else{
+      return d;
+    }
+  }))
+}
+
+// User presses 'delete'
+const removeDog = (dogId) => {
+  setDogs(dogs.filter((d) => d.id !== dogId))
+}
+```
+
+Instead of setting state directly like this, we dispatch actions. This reminds me of Vuex.
+
+We can write a reducer function and use the reducer function from our component then.
+
+We change our thinking from 'here's what to do', to 'the user just did this'. Which is why we use dispatch actions.
+
+Write like this:
+
+```js
+// User presses 'Add'
+const addDog = (dog) => {
+  dispatch({
+    type: "added",
+    dog: dog,
+  });
+};
+
+// User changes something, presses 'save'
+const updateDog = (dog) => {
+  dispatch({
+    type: "changed",
+    dog: dog,
+  });
+};
+
+// User presses 'delete'
+const removeDog = (dogId) => {
+  dispatch(
+    // An action object:
+    {
+      type: "deleted",
+      id: dogId,
+    }
+  );
+};
+```
+
+The object we passed to 'dispatch' above is an 'action'.
