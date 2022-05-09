@@ -650,3 +650,15 @@ Keep in mind we can use an empty array as the initial state:
 ```js
 const [dogs, dispatch] = useReducer(myReducer, []);
 ```
+
+---
+
+## Using forwardRef in with typescript.
+
+```js
+const Component = React.forwardRef<RefType, PropsType>((props, ref) => {
+  return <div></div>;
+})
+```
+
+Don't have to pass the props type if we aren't using props.
