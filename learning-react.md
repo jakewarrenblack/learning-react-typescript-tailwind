@@ -669,7 +669,7 @@ We use this for doing extra stuff with our forwardedRefs.
 
 We can replace the native functions like blur() and focus() with our own functions!
 
-````js
+```js
 const App = () => {
 const refToForward = useRef();
 
@@ -702,7 +702,6 @@ const MyInput = forwardRef((props, forwardedRef) => {
 })
 ```
 
-
 # React **with** TypeScript
 
 ## 1. Props
@@ -722,7 +721,7 @@ const App = ({ someText }: AppProps) => {
     </>
   );
 };
-````
+```
 
 Some props can be optional.
 

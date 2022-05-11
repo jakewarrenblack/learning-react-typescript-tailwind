@@ -542,3 +542,30 @@ const doSomething: never => {
 ```
 
 The above throws an error so stops execution, it'll never finish, so return type of never!
+
+## Partial
+
+If we have two types:
+
+```ts
+type Animal {
+  species: string;
+  age: number
+}
+
+type Dog {
+  name: string;
+  isBrown: boolean;
+}
+```
+
+We can use Partial to intersect the types of Dog but make them all optional:
+
+```ts
+interface Animal {
+  species: string;
+  age: number;
+} & Partial<Dog>
+```
+
+Means we can use any of the attributes of Dog as well, optionally.
