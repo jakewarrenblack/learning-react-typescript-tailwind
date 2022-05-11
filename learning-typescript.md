@@ -217,6 +217,20 @@ function makeAllLeftHanded(people: Person[]): LeftHandedPerson[]{
 }
 ```
 
+I think it makes more sense when doing it with an interface, just looks more familiar.
+
+````js
+interface Animal {
+  species: string;
+  age: number;
+}
+
+interface Person extends Animal {
+  name: string;
+  profession: string;
+}
+```
+
 ---
 
 ## 3. Union types and optional properties
@@ -251,7 +265,7 @@ const person3: Person = {
   height: 120,
   language: { other: "chinese" },
 };
-```
+````
 
 We could make language its own type:
 
@@ -490,3 +504,41 @@ type AppProps = {
 
 const App = () => return (<div>)
 ```
+
+## Any, Void, Never
+
+### Void
+
+```js
+// A void method, doesn't return anything
+const doSomething = () => {
+  console.log("Do Something");
+};
+
+// Doing that explicitly
+const doSomething = (): void => {
+  console.log("Do something");
+};
+```
+
+If you tried to return something from above, type error thrown.
+
+### Any
+
+If you give something a type of any, you're opting out of type checking. Any value will be accepted.
+
+```js
+const something: any = "blabla";
+```
+
+Don't use it! If you get an error you can't fix, it's your fault, dummy.
+
+### Never
+
+```js
+const doSomething: never => {
+  throw 'never'
+}
+```
+
+The above throws an error so stops execution, it'll never finish, so return type of never!

@@ -662,3 +662,179 @@ const Component = React.forwardRef<RefType, PropsType>((props, ref) => {
 ```
 
 Don't have to pass the props type if we aren't using props.
+
+## UseImperativeHandle
+
+We use this for doing extra stuff with our forwardedRefs.
+
+We can replace the native functions like blur() and focus() with our own functions!
+
+````js
+const App = () => {
+const refToForward = useRef();
+
+  return (
+    <div>
+      <!-- Now we can use the focusAndBlur method from below>
+      <button onClick={refToForward.current.focusAndBlur()}>
+      <MyInput/>
+    </div>
+  )
+}
+
+const MyInput = forwardRef((props, forwardedRef) => {
+  const mylocalRef = useRef();
+
+  useImperativeHandle(forwardedRef, () => {
+    return {
+      focusAndBlur: () => {
+        myLocalRef.current.focus()
+        setTimeOut(() => {
+          myLocalRef.current.blur();
+        }, 1000)
+      }
+    }
+  })
+
+  return (
+    <input ref={myLocalRef} placeholder="Enter text here"/>
+  )
+})
+```
+
+
+# React **with** TypeScript
+
+## 1. Props
+
+We need to explicitly type our props.
+
+```ts
+interface AppProps {
+  someText: string;
+}
+
+// Now it will know someText should be a string
+const App = ({ someText }: AppProps) => {
+  return (
+    <>
+      <h1>{someText}</h1>
+    </>
+  );
+};
+````
+
+Some props can be optional.
+
+```ts
+interface AppProps {
+  someText: string;
+  // Question mark denotes an optional property
+  somethingElse?: string;
+}
+
+// Now it will know someText should be a string
+const App = ({ someText, somethingElse }: AppProps) => {
+  return (
+    <>
+      <h1>{someText}</h1>
+      {somethingElse && <p>{somethingElse}</p>}
+    </>
+  );
+};
+```
+
+Can also provide defaults;
+
+```ts
+const App = ({ someText, somethingElse = "Lorem ipsum" }: AppProps) => {
+  // etc
+};
+```
+
+## useState
+
+Some very common and important concepts within TypeScript tie in here.
+
+```ts
+const App = () => {
+  const [user, setUser] useState("userName")
+
+  return (
+    <>
+      <p>{user}</p>
+    </>
+  )
+}
+```
+
+Above will work fine, because of type inference. We passed as tring to useState, so TS will know it's a string.
+
+```ts
+const App = () => {
+  const [user, setUser] useState(null)
+
+  // Returns setUser
+  const getUser = () => setUser({
+    name: 'Joe Bloggs',
+    age: 42,
+    role: true,
+    address: {
+      street: 'Evergreen Terrace',
+      number: 42,
+      town: 'Springfield'
+    }
+  })
+
+  return (
+    <>
+      <button onClick={getUser}>Get the user</button>
+      {user && <p>{user.name}</p>}
+    </>
+  )
+}
+```
+
+Above won't work. We need to tell typescript what to do with the user state.
+
+```ts
+interface Address {
+  street: string;
+  number: number;
+  town: string;
+}
+
+interface User {
+  name: string;
+  age: number;
+  admin: boolean;
+  address: Address;
+}
+
+// A union type
+const [user, setUser] = useState<user | null>(null);
+```
+
+Now the above is fine, we tell TS that our user can be _either_ of type User, or null.
+
+We'll use this exact thing all the time, when the state has to be null at first.
+
+## TypeScript forms and events
+
+Typescript doesn't like our events to have 'any' types.
+
+```js
+onClick={(e) => onChange(e)}
+```
+
+If you hover over the (e) here, TS will tell us the type of the event, copy and paste it!
+
+Eg
+
+```js
+const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  // etc
+};
+```
+
+When the handler has the type, we can just write it as onChange(), no (e) => onChange(e) needed.
