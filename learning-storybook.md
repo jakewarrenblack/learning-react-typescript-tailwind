@@ -54,5 +54,3 @@ export default {
 ```
 
 If we used something like onClick as a name, storybook would be clever enough to realise that's an event handler.
-
-## 4. More complicated stories
