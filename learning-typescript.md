@@ -569,3 +569,44 @@ interface Animal {
 ```
 
 Means we can use any of the attributes of Dog as well, optionally.
+
+## Omit
+
+```ts
+type Animal {
+  species: string;
+  age: number;
+}
+
+type Dog {
+  name: string;
+  isBrown: boolean;
+}
+```
+
+We can say we want to take all teh attributes from another type, excluding specific ones.
+
+```ts
+type DogNoBrown = Omit<Dog, "isBrown">;
+```
+
+## Pick
+
+Include specific values we need from another type.
+
+```ts
+type Dog {
+  name: string;
+  age: number;
+}
+
+type Animal {
+  species: string;
+  hasStripes: boolean;
+}
+
+type StripedDog = {
+  name: string;
+  age: number;
+} & Pick<Animal, 'hasStripes'>
+```

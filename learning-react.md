@@ -671,16 +671,16 @@ We can replace the native functions like blur() and focus() with our own functio
 
 ```js
 const App = () => {
-const refToForward = useRef();
+  const refToForward = useRef();
 
   return (
     <div>
-      <!-- Now we can use the focusAndBlur method from below>
-      <button onClick={refToForward.current.focusAndBlur()}>
-      <MyInput/>
+      {/*Now we can use the focusAndBlur method from below>*/}
+      <button onClick={refToForward.current.focusAndBlur()} />
+      <MyInput />
     </div>
-  )
-}
+  );
+};
 
 const MyInput = forwardRef((props, forwardedRef) => {
   const mylocalRef = useRef();
@@ -688,18 +688,16 @@ const MyInput = forwardRef((props, forwardedRef) => {
   useImperativeHandle(forwardedRef, () => {
     return {
       focusAndBlur: () => {
-        myLocalRef.current.focus()
+        myLocalRef.current.focus();
         setTimeOut(() => {
           myLocalRef.current.blur();
-        }, 1000)
-      }
-    }
-  })
+        }, 1000);
+      },
+    };
+  });
 
-  return (
-    <input ref={myLocalRef} placeholder="Enter text here"/>
-  )
-})
+  return <input ref={myLocalRef} placeholder="Enter text here" />;
+});
 ```
 
 # React **with** TypeScript
@@ -767,7 +765,7 @@ const App = () => {
 }
 ```
 
-Above will work fine, because of type inference. We passed as tring to useState, so TS will know it's a string.
+Above will work fine, because of type inference. We passed a string to useState, so TS will know it's a string.
 
 ```ts
 const App = () => {
@@ -837,3 +835,13 @@ const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 ```
 
 When the handler has the type, we can just write it as onChange(), no (e) => onChange(e) needed.
+
+## useMemo
+
+The point of memoization is to cache the results of computionally expensive functions to be remembered. If we had a memoized function that calculated 1 + 1 to return 2, it would never bother running 1 + 1 again after it got the answer, it would just remember that the result when it receives 1 + 1 should be 2.
+
+It re-memoizes if its dependencies change.
+
+Should write your code first before trying to optimise anything with useMemo.
+
+Remember it will run on every render if you don't give it a dependency array!
