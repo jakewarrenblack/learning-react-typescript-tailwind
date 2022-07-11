@@ -293,3 +293,19 @@ import {format} from 'date-fns'
 }
 
 ```
+
+## Global Filtering
+
+We can have filters which apply to all columns at once, e.g. searching.
+
+```js
+// export const GlobalFilter = ({filter, setFilter}) => {
+//   return (
+//     <span>
+//       Search: {' '}
+//       <input value={filter || ''}
+//       onChange=((e) => ))/>
+//     </span>
+//   )
+// }
+```
